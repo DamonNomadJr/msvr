@@ -1,5 +1,5 @@
 export var setting = {
-    GRAPH:{
+    LOCAL_GRAPH:{
         nodes: {},
         arcs: []
     },
