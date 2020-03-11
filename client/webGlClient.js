@@ -1,42 +1,8 @@
-import { wrap } from "./data/globals";
-// import  from "./data/worldscript";
-
-
-let vrContextID;
-let audioContextID;
-let ws;
-
-function hashCode(str) { // java String#hashCode
-    var hash = 0;
-    for (var i = 0; i < str.length; i++) {
-       hash = str.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    return hash;
-} 
-
-function intToRGB(i){
-    var c = (i & 0x00FFFFFF)
-        .toString(16)
-        .toUpperCase();
-
-    return "00000".substring(0, 6 - c.length) + c;
-}
-
-function colorFromString(str) {
-    let int = Math.abs(hashCode(str));
-    let hue = int % 360;
-    let result = [0, 0, 0, 1];
-    new THREE.Color(`hsla(${hue}, 35%, 50%)`).toArray(result);
-    return result;
-}
-
-function hexColorFromString(str) {
-    return "#" + intToRGB(hashCode(str));
-}
-
-function clamp(num, min, max) {
-    return num <= min ? min : num >= max ? max : num;
-}
+import * as Globals from "./data/globals.js";
+import * as Socket from "./js/socket.js";
+import { colorFromString } from "./data/color_library.js";
+import { setting } from "./data/settings.js";
+console.log(setting.DRAWABLE);
 
 // generate a random name for new object:
 let gensym = (function() {
@@ -58,6 +24,10 @@ let localGraph = {
 	nodes: {},
 	arcs: []
 }
+
+let vrContextID;
+let audioContextID;
+let ws;
 
 // debug
 let ctrlstatedivs = []
@@ -150,7 +120,7 @@ const KNOB_SWING_DISTANCE = 0.2;
 
 function knobAngleToValue(angle) {
     // // angle should be in range -PI to PI
-    angle = wrap(angle + Math.PI, Math.PI * 2) - Math.PI;
+    angle = Globals.wrap(angle + Math.PI, Math.PI * 2) - Math.PI;
 
     if (angle < KNOB_SWEEP) angle = KNOB_SWEEP;
     if (angle > -KNOB_SWEEP) angle = -KNOB_SWEEP;
@@ -1853,7 +1823,7 @@ function animate() {
             let delta = incomingDeltas.shift();
             // TODO: derive which world to add to:
             try {
-                got.applyDeltasToGraph(localGraph, delta);
+                got.applyDeltasToGraph(setting.GRAPH, delta);
 			} catch (e) {
 				console.warn(e);
 			}
@@ -2453,7 +2423,7 @@ function onKeypress(e) {
             outgoingDeltas.push(delta);
         }break;
         case "p": {
-            console.log(localGraph)
+            console.log(setting.GRAPH)
         } break;
         case "l":{ 
             // let message = ;

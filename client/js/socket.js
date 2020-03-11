@@ -1,5 +1,4 @@
-
-class Socket {
+export default class Socket {
     constructor(opt) {
 
         // copy opt into this:

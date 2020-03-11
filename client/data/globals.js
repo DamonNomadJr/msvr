@@ -44,3 +44,7 @@ export function colorFromString(str) {
 export function hexColorFromString(str) {
     return "#" + intToRGB(hashCode(str));
 }
+
+export function clamp(num, min, max) {
+    return num <= min ? min : num >= max ? max : num;
+}
